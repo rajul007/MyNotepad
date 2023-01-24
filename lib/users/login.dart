@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotepad/db/mongodb.dart';
 import 'package:mongo_dart/mongo_dart.dart' as md;
-import 'package:mynotepad/notes/display.dart';
+import 'package:mynotepad/notes/home.dart';
 import 'package:mynotepad/users/createuser.dart';
 
 class CheckLoginState extends StatefulWidget {
@@ -37,7 +37,7 @@ class _CheckLoginStateState extends State<CheckLoginState> {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
               builder: (BuildContext context) {
-                return DisplayNotes();
+                return Home();
               },
               settings: RouteSettings(arguments: user_token)),
           (route) => false);
@@ -178,8 +178,7 @@ class _LoginState extends State<Login> {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
               builder: (BuildContext context) {
-                // return DisplayNotes(verifyToken(result));
-                return DisplayNotes();
+                return Home();
               },
               settings: RouteSettings(arguments: verifyToken(result))),
           (route) => false);

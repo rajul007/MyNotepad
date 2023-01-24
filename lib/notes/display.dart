@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mynotepad/db/mongodb.dart';
 import 'package:mynotepad/models/Notes.dart';
 import 'package:mongo_dart/mongo_dart.dart' as md;
-import 'package:mynotepad/users/login.dart';
 
 class DisplayNotes extends StatefulWidget {
   const DisplayNotes({super.key});
@@ -17,7 +15,6 @@ class _DisplayNotesState extends State<DisplayNotes> {
   Widget build(BuildContext context) {
     md.ObjectId user =
         ModalRoute.of(context)!.settings.arguments as md.ObjectId;
-
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -56,19 +53,6 @@ class _DisplayNotesState extends State<DisplayNotes> {
             },
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final storage = new FlutterSecureStorage();
-          await storage.deleteAll();
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-            builder: (BuildContext context) {
-              return Login();
-            },
-          ), (route) => false);
-        },
-        backgroundColor: Colors.green,
-        child: const Icon(Icons.logout),
       ),
     );
   }
