@@ -5,6 +5,7 @@ import 'package:mongo_dart/mongo_dart.dart' as md;
 import 'package:mynotepad/db/mongodb.dart';
 import 'package:mynotepad/models/Users.dart';
 import 'package:mynotepad/users/login.dart';
+import 'package:validators/validators.dart';
 
 class CreateUser extends StatefulWidget {
   const CreateUser({super.key});
@@ -153,9 +154,24 @@ class _CreateUserState extends State<CreateUser> {
 
   Future<void> _createUser(String name, String email, String password,
       String confirm_password) async {
-    if (confirm_password != password) {
+    if (!isLength(name, 5)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Name must atleast be 5 characters long")));
+      return;
+    }
+    if (!isLength(password, 5)) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Password does not match with Confirm field")));
+          content: Text("Password must atleast be 5 characters long")));
+      return;
+    }
+    if (!isEmail(email)) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Invalid Email")));
+      return;
+    }
+    if (!equals(confirm_password, password)) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Passwords does not match")));
       return;
     }
     var _id = md.ObjectId();
