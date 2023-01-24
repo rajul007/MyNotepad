@@ -14,7 +14,26 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   var email = TextEditingController();
   var password = TextEditingController();
+  bool isEmail = false; // To check if email field is empty
+  bool isPass = false; // To check if password field is empty
   final jwt_secret = 'Youare@wesome';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    email.addListener(() {
+      setState(() {
+        isEmail = email.text.isNotEmpty;
+      });
+    });
+
+    password.addListener(() {
+      setState(() {
+        isPass = password.text.isNotEmpty;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +74,30 @@ class _LoginState extends State<Login> {
                             borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
+                    SizedBox(height: 20),
                     ElevatedButton(
-                        onPressed: () {
-                          _loginUser(email.text, password.text);
-                        },
-                        child: Text("Login"))
+                        onPressed: isEmail && isPass
+                            ? () => _loginUser(email.text, password.text)
+                            : null,
+                        child: Text("Login")),
+                    Container(
+                      padding: EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                          border: Border(
+                        bottom: BorderSide(color: Colors.black26),
+                      )),
+                    ),
+                    Padding(
+                        padding: EdgeInsets.all(15),
+                        child: Text.rich(TextSpan(
+                            text: "Don't have an account? ",
+                            children: <InlineSpan>[
+                              TextSpan(
+                                  text: "Sign Up",
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold))
+                            ])))
                   ],
                 ),
               )

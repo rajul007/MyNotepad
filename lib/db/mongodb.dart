@@ -22,6 +22,20 @@ class MongoDatabase {
     notes = db.collection(notesCollection);
   }
 
+  static Future<String> createUser(UserSchema data) async {
+    try {
+      var result = await users.insertOne(data.toJson());
+      if (result.isSuccess) {
+        return "Data inserted Successfully";
+      } else {
+        return "Something went wrong";
+      }
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
   static Future<dynamic> login(String email, String password) async {
     try {
       Map<String, dynamic>? user = await users.findOne({"email": email});
