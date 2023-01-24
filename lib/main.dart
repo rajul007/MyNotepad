@@ -18,6 +18,6 @@ class MyApp extends StatelessWidget {
         title: 'MyNotepad',
         theme: ThemeData(
             primarySwatch: Colors.blue, scaffoldBackgroundColor: Colors.white),
-        home: Login());
+        home: const CheckLoginState());
   }
 }

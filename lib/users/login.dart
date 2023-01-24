@@ -2,9 +2,59 @@ import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotepad/db/mongodb.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mongo_dart/mongo_dart.dart' as md;
+import 'package:mynotepad/notes/display.dart';
 import 'package:mynotepad/users/createuser.dart';
+
+class CheckLoginState extends StatefulWidget {
+  const CheckLoginState({super.key});
+
+  @override
+  State<CheckLoginState> createState() => _CheckLoginStateState();
+}
+
+class _CheckLoginStateState extends State<CheckLoginState> {
+  final jwt_secret = 'Youare@wesome';
+  @override
+  void initState() {
+    super.initState();
+    MongoDatabase.getState().then((token) {
+      checkLogin(token);
+    });
+  }
+
+  void checkLogin(String? token) async {
+    print("Token ${token}");
+    if (token == "" || token == null) {
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+        builder: (BuildContext context) {
+          return Login();
+        },
+      ), (route) => false);
+    } else {
+      String auth_token = token;
+      final user_token = verifyToken(auth_token);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (BuildContext context) {
+                return DisplayNotes();
+              },
+              settings: RouteSettings(arguments: user_token)),
+          (route) => false);
+    }
+  }
+
+  dynamic verifyToken(String token) {
+    final jwt = JWT.verify(token, SecretKey(jwt_secret));
+
+    return md.ObjectId.fromHexString(jwt.payload['user']);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -22,7 +72,6 @@ class _LoginState extends State<Login> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     email.addListener(() {
       setState(() {
@@ -126,13 +175,19 @@ class _LoginState extends State<Login> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("Please try to login with correct credentials")));
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Logged In Successfully")));
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (BuildContext context) {
+                // return DisplayNotes(verifyToken(result));
+                return DisplayNotes();
+              },
+              settings: RouteSettings(arguments: verifyToken(result))),
+          (route) => false);
     }
+  }
 
-    dynamic verifyToken(String token) {
-      final jwt = JWT.verify(token, SecretKey(jwt_secret));
-      return md.ObjectId.fromHexString(jwt.payload['user']);
-    }
+  dynamic verifyToken(String token) {
+    final jwt = JWT.verify(token, SecretKey(jwt_secret));
+    return md.ObjectId.fromHexString(jwt.payload['user']);
   }
 }

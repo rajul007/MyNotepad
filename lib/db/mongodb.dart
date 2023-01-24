@@ -23,19 +23,12 @@ class MongoDatabase {
     notes = db.collection(notesCollection);
   }
 
-  // static Future<String> createUser(UserSchema data) async {
-  //   try {
-  //     var result = await users.insertOne(data.toJson());
-  //     if (result.isSuccess) {
-  //       return "Data inserted Successfully";
-  //     } else {
-  //       return "Something went wrong";
-  //     }
-  //   } catch (e) {
-  //     print(e.toString());
-  //     return e.toString();
-  //   }
-  // }
+  static Future<List<Map<String, dynamic>>> getNotes(ObjectId user) async {
+    final userNotes = await notes.find({'user': user}).toList();
+    print(userNotes);
+    return userNotes;
+  }
+
   static Future<String> createUser(String name, String email, String password,
       String confirmPassword) async {
     if (!isLength(name, 5)) {
@@ -57,14 +50,14 @@ class MongoDatabase {
       }
 
       var _id = ObjectId();
-      var hashed_password =
-          new DBCrypt().hashpw(password, new DBCrypt().gensaltWithRounds(10));
+      var hashedPassword =
+          new DBCrypt().hashpw(password, DBCrypt().gensaltWithRounds(10));
 
       final userData = UserSchema(
           id: _id,
           name: name,
           email: email,
-          password: hashed_password,
+          password: hashedPassword,
           date: DateTime.fromMillisecondsSinceEpoch(
               DateTime.now().millisecondsSinceEpoch,
               isUtc: true));
@@ -103,7 +96,13 @@ class MongoDatabase {
   }
 
   static Future<void> saveState(String user) async {
-    final storage = FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
     await storage.write(key: "user", value: user);
+  }
+
+  static Future<String?> getState() async {
+    const storage = FlutterSecureStorage();
+    String? user = await storage.read(key: "user");
+    return user;
   }
 }
