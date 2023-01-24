@@ -1,8 +1,10 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotepad/db/mongodb.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mongo_dart/mongo_dart.dart' as md;
+import 'package:mynotepad/users/createuser.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -96,7 +98,14 @@ class _LoginState extends State<Login> {
                                   text: "Sign Up",
                                   style: TextStyle(
                                       color: Colors.blue,
-                                      fontWeight: FontWeight.bold))
+                                      fontWeight: FontWeight.bold),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () => Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                MaterialPageRoute(builder:
+                                                    (BuildContext context) {
+                                          return const CreateUser();
+                                        }), (route) => false))
                             ])))
                   ],
                 ),

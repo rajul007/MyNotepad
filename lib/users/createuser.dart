@@ -1,8 +1,10 @@
 import 'package:dbcrypt/dbcrypt.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mongo_dart/mongo_dart.dart' as md;
 import 'package:mynotepad/db/mongodb.dart';
 import 'package:mynotepad/models/Users.dart';
+import 'package:mynotepad/users/login.dart';
 
 class CreateUser extends StatefulWidget {
   const CreateUser({super.key});
@@ -124,7 +126,14 @@ class _CreateUserState extends State<CreateUser> {
                                   text: "Log In",
                                   style: TextStyle(
                                       color: Colors.blue,
-                                      fontWeight: FontWeight.bold))
+                                      fontWeight: FontWeight.bold),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () => Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                MaterialPageRoute(builder:
+                                                    (BuildContext context) {
+                                          return const Login();
+                                        }), (route) => false))
                             ])))
                   ],
                 ),
