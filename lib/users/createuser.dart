@@ -1,11 +1,7 @@
-import 'package:dbcrypt/dbcrypt.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:mongo_dart/mongo_dart.dart' as md;
 import 'package:mynotepad/db/mongodb.dart';
-import 'package:mynotepad/models/Users.dart';
 import 'package:mynotepad/users/login.dart';
-import 'package:validators/validators.dart';
 
 class CreateUser extends StatefulWidget {
   const CreateUser({super.key});
@@ -18,7 +14,7 @@ class _CreateUserState extends State<CreateUser> {
   var name = InputField();
   var email = InputField();
   var password = InputField();
-  var confirm_password = InputField();
+  var confirmPassword = InputField();
 
   @override
   void initState() {
@@ -33,8 +29,8 @@ class _CreateUserState extends State<CreateUser> {
     password.field.addListener(() {
       setFieldState(password);
     });
-    confirm_password.field.addListener(() {
-      setFieldState(confirm_password);
+    confirmPassword.field.addListener(() {
+      setFieldState(confirmPassword);
     });
   }
 
@@ -90,7 +86,7 @@ class _CreateUserState extends State<CreateUser> {
                     ),
                     SizedBox(height: 20),
                     TextField(
-                      controller: confirm_password.field,
+                      controller: confirmPassword.field,
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: "Confirm Password",
@@ -103,12 +99,12 @@ class _CreateUserState extends State<CreateUser> {
                         onPressed: name.fieldStatus &&
                                 email.fieldStatus &&
                                 password.fieldStatus &&
-                                confirm_password.fieldStatus
+                                confirmPassword.fieldStatus
                             ? () => _createUser(
                                 name.field.text,
                                 email.field.text,
                                 password.field.text,
-                                confirm_password.field.text)
+                                confirmPassword.field.text)
                             : null,
                         child: Text("Sign Up")),
                     Container(
@@ -153,43 +149,21 @@ class _CreateUserState extends State<CreateUser> {
   }
 
   Future<void> _createUser(String name, String email, String password,
-      String confirm_password) async {
-    if (!isLength(name, 5)) {
+      String confirmPassword) async {
+    var result =
+        await MongoDatabase.createUser(name, email, password, confirmPassword);
+    if (result == "Success") {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) {
+        return const Login();
+      }), (route) => false);
+
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Name must atleast be 5 characters long")));
-      return;
-    }
-    if (!isLength(password, 5)) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Password must atleast be 5 characters long")));
-      return;
-    }
-    if (!isEmail(email)) {
+          SnackBar(content: Text("Account Created Successfully")));
+    } else {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Invalid Email")));
-      return;
+          .showSnackBar(SnackBar(content: Text(result)));
     }
-    if (!equals(confirm_password, password)) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Passwords does not match")));
-      return;
-    }
-    var _id = md.ObjectId();
-    var hashed_password =
-        new DBCrypt().hashpw(password, new DBCrypt().gensaltWithRounds(10));
-
-    final data = UserSchema(
-        id: _id,
-        name: name,
-        email: email,
-        password: hashed_password,
-        date: DateTime.fromMillisecondsSinceEpoch(
-            DateTime.now().millisecondsSinceEpoch,
-            isUtc: true));
-
-    var result = await MongoDatabase.createUser(data);
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text("Successfully Signed In ${_id}")));
   }
 }
 

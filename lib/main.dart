@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mynotepad/db/mongodb.dart';
-import 'package:mynotepad/users/createuser.dart';
 import 'package:mynotepad/users/login.dart';
 
 void main() async {
@@ -19,6 +18,6 @@ class MyApp extends StatelessWidget {
         title: 'MyNotepad',
         theme: ThemeData(
             primarySwatch: Colors.blue, scaffoldBackgroundColor: Colors.white),
-        home: CreateUser());
+        home: Login());
   }
 }
