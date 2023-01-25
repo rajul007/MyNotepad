@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mynotepad/db/mongodb.dart';
 import 'package:mynotepad/models/Notes.dart';
 import 'package:mongo_dart/mongo_dart.dart' as md;
+import 'package:mynotepad/notes/update.dart';
 
 class DisplayNotes extends StatefulWidget {
   const DisplayNotes({super.key});
@@ -15,7 +16,7 @@ class _DisplayNotesState extends State<DisplayNotes> {
   Widget build(BuildContext context) {
     md.ObjectId user =
         ModalRoute.of(context)!.settings.arguments as md.ObjectId;
-    MongoDatabase.token = user;
+    // MongoDatabase.token = user;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -60,9 +61,15 @@ class _DisplayNotesState extends State<DisplayNotes> {
 
   Widget displayCard(NotesSchema data) {
     return GestureDetector(
-      onTap: () {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Clicked")));
+      onTap: () async {
+        Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => UpdateNote(),
+                    settings: RouteSettings(arguments: data)))
+            .then((value) {
+          setState(() {});
+        });
       },
       child: Card(
         child: Padding(

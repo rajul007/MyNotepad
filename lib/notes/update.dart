@@ -3,30 +3,36 @@
 import 'package:flutter/material.dart';
 import 'package:mynotepad/db/mongodb.dart';
 import 'package:mongo_dart/mongo_dart.dart' as md;
+import 'package:mynotepad/models/Notes.dart';
 import 'package:mynotepad/notes/inputfields.dart';
 
-class InsertNotes extends StatefulWidget {
-  const InsertNotes({super.key});
+class UpdateNote extends StatefulWidget {
+  const UpdateNote({super.key});
   @override
-  State<InsertNotes> createState() => _InsertNotesState();
+  State<UpdateNote> createState() => _UpdateNoteState();
 }
 
-class _InsertNotesState extends State<InsertNotes> {
+class _UpdateNoteState extends State<UpdateNote> {
   var title = TextEditingController();
   var tag = TextEditingController();
   var description = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    NotesSchema data =
+        ModalRoute.of(context)!.settings.arguments as NotesSchema;
+
+    title.text = data.title;
+    tag.text = data.tag;
+    description.text = data.description;
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
               onPressed: () {
-                _insertNote(MongoDatabase.token, title.text, description.text,
-                    tag.text);
+                _updateNote(data.id, title.text, description.text, tag.text);
               },
-              icon: Icon(Icons.add))
+              icon: Icon(Icons.update))
         ],
       ),
       body: SingleChildScrollView(
@@ -42,16 +48,10 @@ class _InsertNotesState extends State<InsertNotes> {
     );
   }
 
-  Future<void> _insertNote(
-      md.ObjectId user, String title, String description, String tag) async {
-    var result = await MongoDatabase.insertNote(user, title, description, tag);
-    if (result == "Success") {
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Note Added Successfully")));
-    } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(result)));
-    }
+  Future<void> _updateNote(
+      md.ObjectId id, String title, String description, String tag) async {
+    MongoDatabase.update(id, title, description, tag).whenComplete(() =>
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Note Updated Successfully"))));
   }
 }

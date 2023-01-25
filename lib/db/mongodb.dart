@@ -59,6 +59,18 @@ class MongoDatabase {
     return userNotes;
   }
 
+  static Future<void> update(
+      ObjectId id, String title, String description, String tag) async {
+    try {
+      var note = await notes.findOne({"_id": id});
+      note['title'] = title;
+      note['tag'] = tag;
+      note['description'] = description;
+
+      await notes.save(note);
+    } catch (e) {}
+  }
+
   static Future<String> createUser(String name, String email, String password,
       String confirmPassword) async {
     if (!isLength(name, 5)) {
@@ -101,6 +113,15 @@ class MongoDatabase {
     } catch (e) {
       return e.toString();
     }
+  }
+
+  static Future<Map<String, dynamic>> getUser(ObjectId id) async {
+    var user = await users.findOne({"_id": id});
+    Map<String, dynamic> userDetails = {
+      "name": user["name"],
+      "email": user["email"]
+    };
+    return userDetails;
   }
 
   static Future<dynamic> login(String email, String password) async {
