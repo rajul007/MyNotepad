@@ -71,6 +71,12 @@ class MongoDatabase {
     } catch (e) {}
   }
 
+  static Future<void> delete(ObjectId id) async {
+    try {
+      await notes.remove(where.id(id));
+    } catch (e) {}
+  }
+
   static Future<String> createUser(String name, String email, String password,
       String confirmPassword) async {
     if (!isLength(name, 5)) {

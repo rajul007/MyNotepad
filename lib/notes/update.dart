@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mynotepad/db/mongodb.dart';
 import 'package:mongo_dart/mongo_dart.dart' as md;
 import 'package:mynotepad/models/Notes.dart';
+import 'package:mynotepad/notes/delete.dart';
 import 'package:mynotepad/notes/inputfields.dart';
 
 class UpdateNote extends StatefulWidget {
@@ -32,7 +33,12 @@ class _UpdateNoteState extends State<UpdateNote> {
               onPressed: () {
                 _updateNote(data.id, title.text, description.text, tag.text);
               },
-              icon: Icon(Icons.update))
+              icon: Icon(Icons.update)),
+          IconButton(
+              onPressed: () {
+                deleteNote(context, data.id);
+              },
+              icon: Icon(Icons.delete))
         ],
       ),
       body: SingleChildScrollView(
