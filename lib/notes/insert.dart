@@ -19,30 +19,38 @@ class _InsertNotesState extends State<InsertNotes> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: Column(
-            // ignore: prefer_const_literals_to_create_immutables
-            children: [
-              TextField(
-                controller: title,
-                decoration: InputDecoration(labelText: "Title"),
-              ),
-              TextField(
-                controller: tag,
-                decoration: InputDecoration(labelText: "Tag"),
-              ),
-              TextField(
-                controller: description,
-                decoration: InputDecoration(labelText: "Description"),
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    _insertNote(MongoDatabase.token, title.text,
-                        description.text, tag.text);
-                  },
-                  child: Text("Add Note"))
-            ]),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Column(
+              // ignore: prefer_const_literals_to_create_immutables
+              children: [
+                TextField(
+                  controller: title,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  decoration: InputDecoration(labelText: "Title"),
+                ),
+                TextField(
+                  controller: tag,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  decoration: InputDecoration(labelText: "Tag"),
+                ),
+                TextField(
+                  controller: description,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  decoration: InputDecoration(labelText: "Description"),
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      _insertNote(MongoDatabase.token, title.text,
+                          description.text, tag.text);
+                    },
+                    child: Text("Add Note"))
+              ]),
+        ),
       ),
     );
   }

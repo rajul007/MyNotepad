@@ -59,22 +59,28 @@ class _DisplayNotesState extends State<DisplayNotes> {
   }
 
   Widget displayCard(NotesSchema data) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("${data.title}"),
-            SizedBox(
-              height: 5,
-            ),
-            Text("${data.tag}"),
-            SizedBox(
-              height: 5,
-            ),
-            Text("${data.description}"),
-          ],
+    return GestureDetector(
+      onTap: () {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Clicked")));
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("${data.title}"),
+              SizedBox(
+                height: 5,
+              ),
+              Text("${data.tag}"),
+              SizedBox(
+                height: 5,
+              ),
+              Text("${data.description}"),
+            ],
+          ),
         ),
       ),
     );
