@@ -15,6 +15,7 @@ class _DisplayNotesState extends State<DisplayNotes> {
   Widget build(BuildContext context) {
     md.ObjectId user =
         ModalRoute.of(context)!.settings.arguments as md.ObjectId;
+    MongoDatabase.token = user;
     return Scaffold(
       body: SafeArea(
         child: Padding(

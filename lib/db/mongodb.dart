@@ -14,7 +14,7 @@ class MongoDatabase {
   // ignore: prefer_typing_uninitialized_variables
   static var db, users, notes;
   static const jwt_secret = 'Youare@wesome';
-  static String? token;
+  static var token;
   static connect() async {
     db = await Db.create(mongoURI);
     await db.open();
@@ -23,9 +23,39 @@ class MongoDatabase {
     notes = db.collection(notesCollection);
   }
 
+  static Future<String> insertNote(
+      ObjectId user, String title, String description, String tag) async {
+    if (!isLength(title, 3)) {
+      return "Title must atleast be 3 characters long";
+    }
+    if (!isLength(description, 5)) {
+      return "Description must atleast be 5 characters long";
+    }
+
+    try {
+      var _id = ObjectId();
+      final data = NotesSchema(
+          id: _id,
+          user: user,
+          title: title,
+          tag: tag == "" ? "General" : tag,
+          description: description,
+          date: DateTime.fromMillisecondsSinceEpoch(
+              DateTime.now().millisecondsSinceEpoch,
+              isUtc: true));
+      var result = await notes.insertOne(data.toJson());
+      if (result.isSuccess) {
+        return "Success";
+      } else {
+        return "Something went wrong";
+      }
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
   static Future<List<Map<String, dynamic>>> getNotes(ObjectId user) async {
     final userNotes = await notes.find({'user': user}).toList();
-    print(userNotes);
     return userNotes;
   }
 

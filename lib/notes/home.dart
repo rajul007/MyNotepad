@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mynotepad/notes/display.dart';
+import 'package:mynotepad/notes/insert.dart';
 import 'package:mynotepad/users/login.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
 
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,17 +23,17 @@ class Home extends StatelessWidget {
         title: Text("MyNotepad"),
       ),
       drawer: const NavigationDrawer(),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () async {
-      //     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-      //       builder: (BuildContext context) {
-      //         return Login();
-      //       },
-      //     ), (route) => false);
-      //   },
-      //   backgroundColor: Colors.green,
-      //   child: const Icon(Icons.logout),
-      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => InsertNotes()))
+              .then((value) {
+            setState(() {});
+          });
+        },
+        backgroundColor: Colors.green,
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
