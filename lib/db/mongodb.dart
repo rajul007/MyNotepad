@@ -9,11 +9,11 @@ import 'package:mynotepad/models/Users.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:validators/validators.dart';
+import 'package:mynotepad/db/constant.dart';
 
 class MongoDatabase {
   // ignore: prefer_typing_uninitialized_variables
   static var db, users, notes;
-  static const jwt_secret = 'Youare@wesome';
   static var token;
   static connect() async {
     db = await Db.create(mongoURI);

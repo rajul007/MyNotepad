@@ -5,6 +5,7 @@ import 'package:mynotepad/db/mongodb.dart';
 import 'package:mongo_dart/mongo_dart.dart' as md;
 import 'package:mynotepad/notes/home.dart';
 import 'package:mynotepad/users/createuser.dart';
+import 'package:mynotepad/db/constant.dart';
 
 class CheckLoginState extends StatefulWidget {
   const CheckLoginState({super.key});
@@ -14,7 +15,6 @@ class CheckLoginState extends StatefulWidget {
 }
 
 class _CheckLoginStateState extends State<CheckLoginState> {
-  final jwt_secret = 'Youare@wesome';
   @override
   void initState() {
     super.initState();

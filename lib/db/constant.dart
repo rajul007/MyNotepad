@@ -1,4 +1,6 @@
-const mongoURI =
-    "mongodb+srv://rajulgarg07:iamthebest@cluster0.fwbbxfe.mongodb.net/mynotebook?retryWrites=true&w=majority";
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+var mongoURI = dotenv.get('ATLAS_URI', fallback: "");
 const usersCollection = "users";
 const notesCollection = "notes";
+var jwt_secret = dotenv.get('JWT_SECRET', fallback: "");
